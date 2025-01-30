@@ -1,12 +1,14 @@
 .container {
-    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .formContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: auto;
     gap: 1rem;
     border: 5px groove yellow;
     background-color: black;
@@ -23,4 +25,38 @@
 
 .button {
     width: 10%;
+}
+
+.titleContainer {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.postButton {
+    color: black;
+    border: none;
+    font-size: 2rem;
+    margin-right: 10px;
+    background: transparent;
+}
+
+.post {
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.postContainer {
+    border-bottom: 5px groove black;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}   
+
+.filterInput {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5rem;
+    text-align: center;
 }
