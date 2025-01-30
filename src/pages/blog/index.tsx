@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/home/Header";
 import styles from "@/styles/blog/Blog.module.css";
+import { Post } from "../../../types/types";
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
     const [filter, setFilter] = useState<string>("");
+    const [title, setTitle] = useState<string>("");
+    const [content, setContent] = useState<string>("");
+    const [tags, setTags] = useState<string>("");
+    const [posts, setPosts] = useState<Post[]>([]);
+
+    const fetchPosts = async () => {
+        const res = await fetch('/api/posts');
+        const data = await res.json();
+        setPosts(data);
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, [])
 
     const togglePost = (index: number) => {
         setOpenPosts(prevState => {
@@ -14,15 +29,28 @@ const Blog = () => {
         });
     };
 
-    const posts = [
-        { title: "Example Title 1", content: "Example post content goes here...", tags: "example, blog, post" },
-        { title: "Example Title 2", content: "Example post content goes here...", tags: "example, blog, post" },
-        // Add more posts here
-    ];
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-    const filteredPosts = posts.filter(post => 
-        post.tags.toLowerCase().includes(filter.toLowerCase())
-    );
+        const res = await fetch('/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                title, 
+                content, 
+                tags: tags.split(',').map(tag => tag.trim())
+            }),
+        });
+
+        if (res.ok) {
+            alert('Post created');
+            window.location.reload();
+        } else {
+            alert('Error');
+        }
+    };
+
+    const filteredPosts = posts.filter(post => post.tags.some(tag => tag.toLocaleLowerCase().includes(filter.toLocaleLowerCase())));
 
     return (
         <div className={styles.container}>
@@ -45,23 +73,23 @@ const Blog = () => {
                     {openPosts[index] && (
                         <div className={styles.post}>
                             <p>{post.content}</p>
-                            <p><strong>Tags:</strong> {post.tags}</p>
+                            <p><strong>Tags:</strong> {post.tags.join(', ')}</p>
                         </div>
                     )}
                 </div>
             ))}
-            <form action="POST" className={styles.formContainer}>
+            <form action="POST" className={styles.formContainer} onSubmit={handleSubmit}>
                 <div className={styles.formItem}>
                     <label>Title</label>
-                    <input type="text" id="title" name="title" />
+                    <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
                 </div>
                 <div className={styles.formItem}>
                     <label>Post</label>
-                    <textarea id="post" name="post" rows={10} cols={100}></textarea>
+                    <textarea id="post" name="post" rows={10} cols={100} value={content} onChange={(e) => setContent(e.target.value)}></textarea>
                 </div>
                 <div className={styles.formItem}>
                     <label>Tags</label>
-                    <input type="text" id="tags" name="tags" />
+                    <input type="text" id="tags" name="tags" value={tags} onChange={(e) => setTags(e.target.value)}/>
                 </div>
                 <button type="submit" className={styles.button}>Submit</button>
             </form>
