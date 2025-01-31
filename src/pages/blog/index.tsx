@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/home/Header";
 import styles from "@/styles/blog/Blog.module.css";
-import { Post } from "../../../types/types";
+import { Post } from "../../../types";
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -12,7 +12,7 @@ const Blog = () => {
     const [posts, setPosts] = useState<Post[]>([]);
 
     const fetchPosts = async () => {
-        const res = await fetch('/api/posts');
+        const res = await fetch('http://localhost:3001/posts');
         const data = await res.json();
         setPosts(data);
     };
