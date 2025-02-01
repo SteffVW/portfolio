@@ -1,8 +1,6 @@
 import Header from "@/components/home/Header"
 import styles from "../../styles/login/Login.module.css";
 import { useState } from "react";
-import Cookies from "js-cookie";
-import { set } from "mongoose";
 
 const Login = () => {
   const [username, setUsername] = useState<string>("");
@@ -34,9 +32,9 @@ const Login = () => {
   }
 
   return(
-    <div>
+    <div className={styles.container}>
       <Header />
-      <div className={styles.container}>
+      <div className={styles.mainContainer}>
         {error &&
           <div className={styles.error}>
             <h2>{error}</h2>

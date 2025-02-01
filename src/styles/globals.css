@@ -3,8 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+}
+
 html, body {
     margin: 0;
     padding: 0;
-    background-color: lightgrey;
+    width: 100vw;
+    height: 100vh;
 }

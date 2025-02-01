@@ -81,8 +81,9 @@ const Blog = () => {
                 onChange={(e) => setFilter(e.target.value)} 
                 className={styles.filterInput}
             />
+            <div className={styles.postsContainer}>
             {filteredPosts.map((post, index) => (
-                <div key={index} className={styles.postContainer}>
+                <div key={index} className={openPosts[index] ? styles.openPostContainer : styles.postContainer }>
                     <div className={styles.titleContainer}>
                         <button onClick={() => togglePost(index)} className={styles.postButton}>
                             {openPosts[index] ? "-" : "+"}
@@ -97,6 +98,7 @@ const Blog = () => {
                     )}
                 </div>
             ))}
+            </div>
             {isAdmin && 
                 <form action="POST" className={styles.formContainer} onSubmit={handleSubmit}>
                     <div className={styles.formItem}>
