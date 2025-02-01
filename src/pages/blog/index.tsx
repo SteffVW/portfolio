@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "@/components/home/Header";
 import styles from "@/styles/blog/Blog.module.css";
 import { Post } from "../../../types";
-import { stringify } from "querystring";
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -11,6 +10,7 @@ const Blog = () => {
     const [content, setContent] = useState<string>("");
     const [tags, setTags] = useState<string>("");
     const [posts, setPosts] = useState<Post[]>([]);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     const fetchPosts = async () => {
         const res = await fetch('http://localhost:3001/posts');
@@ -18,8 +18,22 @@ const Blog = () => {
         setPosts(data);
     };
 
+    const checkAdmin = async () => {
+        const response = await fetch('http://localhost:3001/check-login', {
+            method: 'GET',
+            credentials: 'include',
+        });
+        const data = await response.json();
+        if(data.isAdmin){
+            setIsAdmin(true);
+        } else {
+            setIsAdmin(false);
+        }
+    }
+
     useEffect(() => {
         fetchPosts();
+        checkAdmin();
     }, [])
 
     const togglePost = (index: number) => {
@@ -83,21 +97,23 @@ const Blog = () => {
                     )}
                 </div>
             ))}
-            <form action="POST" className={styles.formContainer} onSubmit={handleSubmit}>
-                <div className={styles.formItem}>
-                    <label>Title</label>
-                    <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
-                </div>
-                <div className={styles.formItem}>
-                    <label>Post</label>
-                    <textarea id="post" name="post" rows={10} cols={100} value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-                </div>
-                <div className={styles.formItem}>
-                    <label>Tags</label>
-                    <input type="text" id="tags" name="tags" value={tags} onChange={(e) => setTags(e.target.value)}/>
-                </div>
-                <button type="submit" className={styles.button}>Submit</button>
-            </form>
+            {isAdmin && 
+                <form action="POST" className={styles.formContainer} onSubmit={handleSubmit}>
+                    <div className={styles.formItem}>
+                        <label>Title</label>
+                        <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                    </div>
+                    <div className={styles.formItem}>
+                        <label>Post</label>
+                        <textarea id="post" name="post" rows={10} cols={100} value={content} onChange={(e) => setContent(e.target.value)}></textarea>
+                    </div>
+                    <div className={styles.formItem}>
+                        <label>Tags</label>
+                        <input type="text" id="tags" name="tags" value={tags} onChange={(e) => setTags(e.target.value)}/>
+                    </div>
+                    <button type="submit" className={styles.button}>Submit</button>
+                </form>
+            }
         </div>
     );
 };

@@ -5,17 +5,21 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import fastifyCors from '@fastify/cors';
 import bcrypt from "bcrypt";
 import jwt from "@fastify/jwt";
+import fastifyCookie from "@fastify/cookie";
 
 dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyCors, {
-    origin: "*",
+    origin: "http://localhost:3000",
+    credentials: true
 });
 
 fastify.register(jwt, {
-    secret: process.env.JWT_SECRET || "supersecretkey"
+    secret: process.env.JWT_SECRET!
 });
+
+fastify.register(fastifyCookie);
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -74,11 +78,36 @@ fastify.post("/login", async (request: FastifyRequest, reply: FastifyReply) => {
                 reply.status(401).send({message: "Invalid password or username"});
             } else {
                 const token = fastify.jwt.sign({ id: user._id, role: user.role });
-                reply.send({ token });             
+                reply.setCookie("token", token,
+                     {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "strict",
+                        path: "/",
+                        maxAge: 60 * 60 * 24 
+                    });
+                reply.send({message: "Logged in successfully"});
             }
         }
     } catch (error) {
         reply.status(500).send({message: "Error logging in", error: error});
+    }
+});
+
+fastify.get("/check-login", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+        const token = request.cookies.token;
+        if(!token){
+            reply.send({isAdmin: false, message: "No token found"});
+        }
+        if(token){
+            const decoded = fastify.jwt.verify(token) as {id: string, role: string};
+            if(decoded.role === "ADMIN"){
+                reply.send({isAdmin: true, message: "Admin logged in"});
+            }
+        }
+    } catch (error) {
+        reply.status(500).send({message: "Error checking login", error: error});
     }
 });
 

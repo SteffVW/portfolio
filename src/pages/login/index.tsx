@@ -2,10 +2,12 @@ import Header from "@/components/home/Header"
 import styles from "../../styles/login/Login.module.css";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { set } from "mongoose";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,18 +16,20 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({username, password})
+      body: JSON.stringify({username, password}),
+      credentials: "include"
     });
 
-    if(!response.ok){
-      throw new Error("tf")
-    }
+    console.log(response);
 
     const data = await response.json();
 
-    Cookies.set('token', data.token, { expires: 1, secure: true, sameSite: 'Strict' });
+    if(!response.ok){
+      setError(data.message);
+      return;
+    }
 
-    console.log(data);
+    setError(null);
     window.location.href = "/";
   }
 
@@ -33,6 +37,11 @@ const Login = () => {
     <div>
       <Header />
       <div className={styles.container}>
+        {error &&
+          <div className={styles.error}>
+            <h2>{error}</h2>
+          </div> 
+        }
       <form action="POST" className={styles.formContainer} onSubmit={onSubmit}>
                 <div className={styles.formItem}>
                     <label>Username</label>

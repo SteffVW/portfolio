@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^10.0.2",
     "@fastify/jwt": "^9.0.3",
     "@types/js-cookie": "^3.0.6",
@@ -19,6 +20,7 @@
     "fastify": "^5.2.1",
     "fastify-cors": "^6.0.3",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "mongodb": "^6.12.0",
     "mongoose": "^8.9.5",
     "next": "15.1.6",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/jwt-decode": "^2.2.1",
     "@types/node": "^20.17.16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
