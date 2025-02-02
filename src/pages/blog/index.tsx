@@ -89,6 +89,7 @@ const Blog = () => {
                             {openPosts[index] ? "-" : "+"}
                         </button>
                         <h2>{post.title}</h2>
+                        <h3 className={styles.date}>{new Date(post.createdAt).toLocaleDateString()}</h3>
                     </div>
                     {openPosts[index] && (
                         <div className={styles.post}>
