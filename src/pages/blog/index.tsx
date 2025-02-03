@@ -94,7 +94,10 @@ const Blog = () => {
                     {openPosts[index] && (
                         <div className={styles.post}>
                             <p>{post.content}</p>
-                            <p><strong>Tags:</strong> {post.tags.join(', ')}</p>
+                            <p><strong>Tags:</strong></p>
+                            <div className={styles.tagsContainer}>
+                                {post.tags.map(tag => <div className={styles.tags} key={tag}><p>{tag}</p></div>)}
+                            </div>
                         </div>
                     )}
                 </div>
