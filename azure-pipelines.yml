@@ -1,19 +1,50 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+name: '1.0.0.$(Date:yyyyMMdd)$(Rev:r)'
+
+variables:
+- group: 'Common'
+#- group: 'MyTemplate'
 
 trigger:
-- main
+  branches:
+    include:
+      - main
+#  paths:
+#    include:
+#    - /core/*
+#    exclude:
+#    - /core/Tests/*
+#    - /core/devops/*
+#    - /core/Apps/*
 
-pool:
-  vmImage: ubuntu-latest
+resources:
+  repositories:
+  - repository: aertssenframework # identifier/alias
+    type: git
+    name: Aertssen.Framework
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: PackageProjects
+  displayName: "Package Projects"
+  dependsOn: []
+  jobs:
+        
+  - job: Package_Portfolio
+    displayName: 'Package Portfolio'
+    pool:
+      name: '$(Build.AzurePoolName)'
+      vmImage: 'windows-latest'
+    steps:  
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+        includeRootFolder: false 
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/portfolio.zip' 
+        replaceExistingArchive: true 
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      condition: succeeded()
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)/portfolio.zip'
+        ArtifactName: 'portfolio'
