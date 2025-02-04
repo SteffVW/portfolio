@@ -21,6 +21,16 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      - name: install dependencies
+        run: |
+          npm install
+
+      - name: Start the server
+        run: |
+          cd server
+          npx tsx server.ts
+          
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
