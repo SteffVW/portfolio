@@ -30,6 +30,7 @@ jobs:
         run: |
           cd server
           nohup npx tsx server.ts &
+          echo "MONGODB_URI is set to ${{ secrets.MONGODB_URI }}"
           
       - name: Build And Deploy
         id: builddeploy
