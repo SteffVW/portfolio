@@ -104,8 +104,7 @@ stages:
                     appType: 'webApp'
                     WebAppName: portfolio-steff
                     package: "$(System.ArtifactsDirectory)/portfolio/portfolio.zip"
-                    JSONFiles: |
-                      **/@(appsettings|app-config|host|extra.settings).json
+
 
 
                 - task: AzureAppServiceManage@0
