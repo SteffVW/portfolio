@@ -91,7 +91,7 @@ stages:
                     verbose: $(verbose)
                     azureSubscription: 'Azure EA Dev'
                     Action: "Stop Azure App Service"
-                    WebAppName: portfolio-steff
+                    WebAppName: 'portfolio-steff.azurewebsites.net'
                     resourceGroupName: 'dev-rsg-stage'
 
 
@@ -102,9 +102,10 @@ stages:
                     ConnectionType: "AzureRM"
                     azureSubscription: 'Azure EA Dev'
                     appType: 'webApp'
-                    WebAppName: portfolio-steff
+                    WebAppName: 'portfolio-steff.azurewebsites.net'
                     package: "$(System.ArtifactsDirectory)/portfolio/portfolio.zip"
-
+                    JSONFiles: |
+                      **/@(appsettings|app-config|host|extra.settings).json
 
 
                 - task: AzureAppServiceManage@0
@@ -113,5 +114,5 @@ stages:
                     verbose: $(verbose)
                     azureSubscription: 'Azure EA Dev'
                     Action: "Start Azure App Service"
-                    WebAppName: portfolio-steff
+                    WebAppName: 'portfolio-steff.azurewebsites.net'
                     resourceGroupName: 'dev-rsg-stage'
