@@ -28,8 +28,6 @@ jobs:
 
       - name: Start the server
         run: |
-          cd server
-          echo ${{ secrets.MONGODB_URI }}
           nohup npx tsx server.ts &
           
       - name: Build And Deploy
