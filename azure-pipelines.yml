@@ -1,0 +1,118 @@
+name: '1.0.0.$(Date:yyyyMMdd)$(Rev:r)'
+
+
+variables:
+  - group: 'Common'
+  - group: 'Portfolio'
+
+
+trigger:
+  branches:
+    include:
+      - main
+  # paths:
+  #   include:
+  #     - /core/*
+  #   exclude:
+  #     - /core/Tests/*
+  #     - /core/devops/*
+  #     - /core/Apps/*
+
+
+resources:
+  repositories:
+    - repository: aertssenframework # identifier/alias
+      type: git
+      name: Aertssen.Framework
+
+
+stages:
+  - stage: PackageProjects
+    displayName: "Package Projects"
+    dependsOn: []
+    jobs:
+      - job: Package_Portfolio
+        displayName: 'Package Portfolio'
+        pool:
+          name: '$(Build.AzurePoolName)'
+          vmImage: 'windows-latest'
+        steps:
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.SourcesDirectory)'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/portfolio.zip'
+              replaceExistingArchive: true
+
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact'
+            condition: succeeded()
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/portfolio.zip'
+              ArtifactName: 'portfolio'
+
+
+  - stage: 'dev'
+    displayName: "Deploy to dev"
+    dependsOn:
+      - 'PackageProjects'
+    condition: succeeded()
+    # variables:
+    #   - template: "../variables/deploy.yml"
+    #     parameters:
+    #       environment: ${{ parameters.environment }}
+
+
+    jobs:
+      - deployment: 'DeployStaticWebsite'
+        environment: 'WithoutApprovals'
+        displayName: 'Deploy portfolio website'
+        pool:
+          name: '$(Build.AzurePoolName)'
+          vmImage: 'windows-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  condition: succeeded()
+                  displayName: "Download artifact portfolio"
+                  inputs:
+                    verbose: $(verbose)
+                    buildType: "current"
+                    artifactName: "portfolio"
+
+
+                - task: AzureAppServiceManage@0
+                  displayName: "Stop portfolio-steff"
+                  inputs:
+                    verbose: $(verbose)
+                    azureSubscription: 'Azure EA Dev'
+                    Action: "Stop Azure App Service"
+                    WebAppName: portfolio-steff
+                    resourceGroupName: 'dev-rsg-stage'
+
+
+                - task: AzureRmWebAppDeployment@4
+                  displayName: "Deploy portfolio-steff"
+                  inputs:
+                    verbose: $(verbose)
+                    ConnectionType: "AzureRM"
+                    azureSubscription: 'Azure EA Dev'
+                    appType: 'webApp'
+                    WebAppName: portfolio-steff
+                    package: "$(System.ArtifactsDirectory)/portfolio/portfolio.zip"
+                    # JSONFiles: |
+                    # **/@(appsettings|app-config|host|extra.settings).json
+
+
+                - task: AzureAppServiceManage@0
+                  displayName: "Start portfolio-steff"
+                  inputs:
+                    verbose: $(verbose)
+                    azureSubscription: 'Azure EA Dev'
+                    Action: "Start Azure App Service"
+                    WebAppName: portfolio-steff
+                    resourceGroupName: 'dev-rsg-stage'
