@@ -11,7 +11,7 @@ dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyCors, {
-    origin: "http://localhost:3000",
+    origin: "*",
     credentials: true
 });
 
