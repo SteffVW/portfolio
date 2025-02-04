@@ -28,6 +28,7 @@ jobs:
 
       - name: Start the server
         run: |
+          cd server
           nohup npx tsx server.ts &
           
       - name: Build And Deploy
