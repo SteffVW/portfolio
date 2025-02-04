@@ -14,8 +14,6 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
-    env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,10 +25,11 @@ jobs:
           npm install
 
       - name: Start the server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           cd server
           nohup npx tsx server.ts &
-          echo "MONGODB_URI is set to ${{ secrets.MONGODB_URI }}"
           
       - name: Build And Deploy
         id: builddeploy
