@@ -39,7 +39,7 @@ stages:
         steps:
           - task: ArchiveFiles@2
             inputs:
-              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+              rootFolderOrFile: '$(Build.SourcesDirectory)'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/portfolio.zip'
