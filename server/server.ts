@@ -11,7 +11,7 @@ dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyCors, {
-    origin: "*",
+    origin: ["http://localhost:3000", "https://portfolio-steff.aertssen.be"],
     credentials: true
 });
 
@@ -111,7 +111,7 @@ fastify.get("/check-login", async (request: FastifyRequest, reply: FastifyReply)
     }
 });
 
-fastify.listen({ port: 3001 }, async(err: Error | null, address: string) => {
+fastify.listen({ port: 3001, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
     if (err){
         throw err;
     }
