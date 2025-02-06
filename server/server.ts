@@ -6,6 +6,7 @@ import fastifyCors from '@fastify/cors';
 import bcrypt from "bcrypt";
 import jwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
+import Post from "../types.ts"
 
 dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
@@ -56,14 +57,20 @@ fastify.post("/posts", async (request: FastifyRequest, reply: FastifyReply) => {
     }
 });
 
-fastify.get("/posts", async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        reply.send(posts);
-    } catch (error) {
-        reply.status(500).send({message: "Error fetching posts", error: error});
-    }
-});
+// fastify.get("/posts", async (request: FastifyRequest, reply: FastifyReply) => {
+//     try {
+//         const posts = await Post.find().sort({ createdAt: -1 });
+//         reply.send(posts);
+//     } catch (error) {
+//         reply.status(500).send({message: "Error fetching posts", error: error});
+//     }
+// });
+
+const getPosts = async(): Post[]  => {
+    const posts = await Post.find().sort({ createdAt: -1 });
+    console.log(posts);
+    return posts;
+}
 
 fastify.post("/login", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
