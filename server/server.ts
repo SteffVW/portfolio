@@ -6,7 +6,7 @@ import fastifyCors from '@fastify/cors';
 import bcrypt from "bcrypt";
 import jwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
-import Post from "../types.ts"
+import {Post} from "../types.ts"
 
 dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
