@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/home/Header";
 import styles from "@/styles/blog/Blog.module.css";
 import { Post } from "../../../types";
+import getPosts from "../../../server/server.ts"
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -12,11 +13,13 @@ const Blog = () => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-    const fetchPosts = async () => {
-        const res = await fetch('https://portfolio-steff.aertssen.be/posts');
-        const data = await res.json();
-        setPosts(data);
-    };
+    // const fetchPosts = async () => {
+    //     const res = await fetch('https://portfolio-steff.aertssen.be/posts');
+    //     const data = await res.json();
+    //     setPosts(data);
+    // };
+
+    
 
     const checkAdmin = async () => {
         const response = await fetch('http://localhost:3001/check-login', {
@@ -32,7 +35,8 @@ const Blog = () => {
     }
 
     useEffect(() => {
-        fetchPosts();
+        // fetchPosts();
+        getPosts();
         checkAdmin();
     }, [])
 
