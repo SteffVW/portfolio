@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/home/Header";
-import styles from "@/styles/blog/Blog.module.css";
+import styles from "../../styles/blog/Blog.module.css";
 import { IPost } from "@/types";
 import {getPosts} from "@/server"
 
