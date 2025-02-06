@@ -66,7 +66,7 @@ fastify.post("/posts", async (request: FastifyRequest, reply: FastifyReply) => {
 //     }
 // });
 
-const getPosts = async(): Post[]  => {
+export const getPosts = async(): Post[]  => {
     const posts = await Post.find().sort({ createdAt: -1 });
     console.log(posts);
     return posts;
