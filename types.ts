@@ -1,6 +1,4 @@
-import { DateToString } from "mongoose";
-
-export interface Post {
+export interface IPost {
     title: string;
     content: string;
     tags: string[];

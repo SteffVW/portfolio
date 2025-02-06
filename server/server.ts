@@ -6,7 +6,7 @@ import fastifyCors from '@fastify/cors';
 import bcrypt from "bcrypt";
 import jwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
-import {Post} from "../types.ts"
+import {IPost} from "@/types"
 
 dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
@@ -66,7 +66,7 @@ fastify.post("/posts", async (request: FastifyRequest, reply: FastifyReply) => {
 //     }
 // });
 
-export const getPosts = async(): Post[]  => {
+export const getPosts = async(): Promise<IPost[]>  => {
     const posts = await Post.find().sort({ createdAt: -1 });
     console.log(posts);
     return posts;

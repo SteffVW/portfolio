@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Header from "@/components/home/Header";
+import Header from "../../components/home/Header";
 import styles from "@/styles/blog/Blog.module.css";
-import { Post } from "../../../types";
-import getPosts from "../../../server/server.ts"
+import { IPost } from "@/types";
+import {getPosts} from "@/server"
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -10,7 +10,7 @@ const Blog = () => {
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [tags, setTags] = useState<string>("");
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<IPost[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     // const fetchPosts = async () => {
