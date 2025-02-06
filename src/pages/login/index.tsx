@@ -1,4 +1,4 @@
-import Header from "@/components/home/Header"
+import Header from "../../components/home/Header"
 import styles from "../../styles/login/Login.module.css";
 import { useState } from "react";
 
