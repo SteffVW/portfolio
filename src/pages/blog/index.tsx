@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/home/Header";
 import styles from "../../styles/blog/Blog.module.css";
-import { IPost } from "@/types";
-import {getPosts} from "@/server"
+import { IPost } from "../../../types";
+// import {getPosts} from "../../../server/server"
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -13,11 +13,11 @@ const Blog = () => {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-    // const fetchPosts = async () => {
-    //     const res = await fetch('https://portfolio-steff.aertssen.be/posts');
-    //     const data = await res.json();
-    //     setPosts(data);
-    // };
+    const fetchPosts = async () => {
+        const res = await fetch('https://portfolio-steff.aertssen.be/posts');
+        const data = await res.json();
+        setPosts(data);
+    };
 
     
 
@@ -35,8 +35,8 @@ const Blog = () => {
     }
 
     useEffect(() => {
-        // fetchPosts();
-        getPosts();
+        fetchPosts();
+        // getPosts();
         checkAdmin();
     }, [])
 
