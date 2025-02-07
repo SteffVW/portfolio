@@ -118,7 +118,7 @@ fastify.get("/check-login", async (request: FastifyRequest, reply: FastifyReply)
     }
 });
 
-fastify.listen({ port: 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
+fastify.listen({ port: Number(process.env.PORT) || 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
     if (err){
         throw err;
     }
