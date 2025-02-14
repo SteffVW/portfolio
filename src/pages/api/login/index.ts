@@ -40,7 +40,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
         }
 
         } else if(req.method === "POST") {
-            const {username, password}: {username: string; password: string} = req.body as {username: string; password: string};
+            const {username, password} = req.body
             const user = await User.findOne({username: username});
             if(!user){
                 res.status(404).json({message: "User not found"})
