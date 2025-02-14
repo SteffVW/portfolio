@@ -49,7 +49,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                             const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!);
                             res.setHeader('Set-Cookie', cookie.serialize('token', token, {
                                 httpOnly: true,
-                                secure: process.env.NODE_ENV !== 'development', // Only set secure flag in production
+                                secure: true,
                                 sameSite: 'strict',
                                 path: '/',
                                 maxAge: 60 * 60 * 24
