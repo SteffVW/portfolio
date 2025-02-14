@@ -3,6 +3,9 @@ import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -35,6 +38,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
         } else {
             res.status(200).json({ isAdmin: false, message: "Not an admin" });
         }
+
         } else if(req.method === "POST") {
             const {username, password}: {username: string; password: string} = req.body as {username: string; password: string};
             const user = await User.findOne({username: username});

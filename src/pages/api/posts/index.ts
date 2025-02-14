@@ -1,6 +1,9 @@
 import { error } from "console";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const PostSchema = new mongoose.Schema({
     title: { type: String, required: true },
