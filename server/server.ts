@@ -118,25 +118,38 @@ fastify.get("/check-login", async (request: FastifyRequest, reply: FastifyReply)
     }
 });
 
-fastify.listen({ port: Number(process.env.PORT) || 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
+export const startServer = async() =>{ 
+    fastify.listen({ port: Number(process.env.PORT) || 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
     if (err){
         throw err;
     }
-
-    const createInitialUser = async () => {
-        const username = process.env.ADMIN_USERNAME!;
-        const password = process.env.ADMIN_PASSWORD!;
-        const saltRounds = parseInt(process.env.SALT_ROUNDS!);
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const user = new User({ username, password: hashedPassword, role: "ADMIN" });
-        await user.save();
-    }
-
-    if(await User.countDocuments() === 0){
-        await createInitialUser();
-    }
-
     else {
         console.log(`Server listening at ${address}`);       
     }
-});
+ });
+}
+
+startServer();
+
+// fastify.listen({ port: Number(process.env.PORT) || 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
+//     if (err){
+//         throw err;
+//     }
+
+//     const createInitialUser = async () => {
+//         const username = process.env.ADMIN_USERNAME!;
+//         const password = process.env.ADMIN_PASSWORD!;
+//         const saltRounds = parseInt(process.env.SALT_ROUNDS!);
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
+//         const user = new User({ username, password: hashedPassword, role: "ADMIN" });
+//         await user.save();
+//     }
+
+//     if(await User.countDocuments() === 0){
+//         await createInitialUser();
+//     }
+
+//     else {
+//         console.log(`Server listening at ${address}`);       
+//     }
+// });

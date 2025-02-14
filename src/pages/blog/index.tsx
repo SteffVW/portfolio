@@ -19,8 +19,6 @@ const Blog = () => {
         setPosts(data);
     };
 
-    
-
     const checkAdmin = async () => {
         const response = await fetch('http://localhost:3001/check-login', {
             method: 'GET',
