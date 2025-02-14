@@ -38,16 +38,16 @@ jobs:
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
-      - name: Start the server
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-          SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
-        run: |
-          cd server
-          nohup npx tsx server.ts &
+      # - name: Start the server
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      #     ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      #     ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      #     SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
+      #   run: |
+      #     cd server
+      #     nohup npx tsx server.ts &
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
