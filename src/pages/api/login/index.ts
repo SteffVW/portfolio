@@ -45,15 +45,20 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                     if(!isPasswordValid){
                         res.status(401).send({message: "Invalid password or username"});
                     } else {
-                        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!);
-                        res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-                            httpOnly: true,
-                            secure: true,
-                            sameSite: 'strict',
-                            path: '/',
-                            maxAge: 60 * 60 * 24
-                        }));
-                    res.send({message: "Logged in successfully"});
+                        try {
+                            const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!);
+                            res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV !== 'development', // Only set secure flag in production
+                                sameSite: 'strict',
+                                path: '/',
+                                maxAge: 60 * 60 * 24
+                            }));
+                            res.send({message: "Logged in successfully"});
+                        } catch (err: any) {
+                            console.error("Error setting cookie: ", err);
+                            res.status(500).json({ message: "Error setting cookie", error: err.message });
+                    }
                 }
             }
         }
