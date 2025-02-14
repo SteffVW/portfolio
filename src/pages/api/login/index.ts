@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import cookie from 'js-cookie';
+import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
@@ -23,8 +23,8 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     const User = mongoose.model('User', UserSchema);
     try {
         if(req.method === "GET"){
-            const cookies = cookie.get(req.headers.cookie || '');
-            const token = cookies ? JSON.parse(cookies).token : null;
+            const cookies = cookie.parse(req.headers.cookie || '');
+            const token = cookies.token;
 
         if (!token) {
             res.status(200).json({ isAdmin: false, message: "No token found" });
@@ -54,8 +54,16 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                             id: user._id,
                             role: user.role
                         }
+                        console.log("Payload:", payload); 
                         const token = jwt.sign(payload, process.env.JWT_SECRET!)
-                        cookie.set("AuthToken", token, { expires: 1, secure: true })
+                        console.log("Token:", token);
+                         res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+                            httpOnly: true,
+                            secure: true,
+                            sameSite: 'strict',
+                            path: '/',
+                            maxAge: 60 * 60 * 24
+                        }));
                         return res.status(200).json({message: "Success"})
                     } catch (error) {
                         res.status(500).json({ message: "Error", error: error });
