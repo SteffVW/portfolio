@@ -13,12 +13,18 @@ const Blog = () => {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
+    // const fetchPosts = async () => {
+    //     const res = await fetch('http://localhost:8080/posts');
+    //     const data = await res.json();
+    //     setPosts(data);
+    // };
+
     const fetchPosts = async () => {
-        const res = await fetch('http://localhost:8080/posts');
+        const res = await fetch('/api/posts');
         const data = await res.json();
         setPosts(data);
     };
-
+    
     const checkAdmin = async () => {
         const response = await fetch('http://localhost:3001/check-login', {
             method: 'GET',
