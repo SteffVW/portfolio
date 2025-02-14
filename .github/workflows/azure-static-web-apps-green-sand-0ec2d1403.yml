@@ -20,9 +20,9 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: install dependencies
-        run: |
-          npm install
+      # - name: install dependencies
+      #   run: |
+      #     npm install
 
       # - name: Start the server
       #   env:
