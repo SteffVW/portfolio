@@ -8,6 +8,12 @@ const PostSchema = new mongoose.Schema({
     tags: [{ type: String, required: true }],
 });
 
+const MONGODB_URI = process.env.MONGODB_URI!;
+mongoose.connect(MONGODB_URI, {
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err: Error) => console.log("MongoDB connection error: ", err));
+
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     const Post = mongoose.model('Post', PostSchema);
     if(req.method === 'GET'){
