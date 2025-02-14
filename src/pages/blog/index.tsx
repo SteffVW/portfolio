@@ -14,7 +14,7 @@ const Blog = () => {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     const fetchPosts = async () => {
-        const res = await fetch('http://127.0.0.1:8080');
+        const res = await fetch('http://127.0.0.1:8080/posts');
         const data = await res.json();
         setPosts(data);
     };
