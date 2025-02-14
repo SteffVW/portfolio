@@ -1,3 +1,4 @@
+import { error } from "console";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,8 +20,12 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     if(req.method === 'GET'){
         const posts = await Post.find().sort({ createdAt: -1 });
         res.status(200).json(posts);
-    } else {
-        res.status(405).json({message: "Method not allowed"});
+    } else if(req.method === "POST"){
+        const { title, content, tags }: { title: string; content: string; tags: string[] } = req.body as { title: string; content: string; tags: string[] };
+        const post = new Post({ title, content, tags });
+        await post.save();
+        res.send({message: "Post created successfully", post: post});
+        res.status(500).send({message: "Error creating post", error: error});
     }
 };
 

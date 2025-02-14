@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "../../components/home/Header";
 import styles from "../../styles/blog/Blog.module.css";
 import { IPost } from "../../../types";
-// import {getPosts} from "../../../server/server"
 
 const Blog = () => {
     const [openPosts, setOpenPosts] = useState<boolean[]>([]);
@@ -13,12 +12,6 @@ const Blog = () => {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-    // const fetchPosts = async () => {
-    //     const res = await fetch('http://localhost:8080/posts');
-    //     const data = await res.json();
-    //     setPosts(data);
-    // };
-
     const fetchPosts = async () => {
         const res = await fetch('/api/posts');
         const data = await res.json();
@@ -26,7 +19,7 @@ const Blog = () => {
     };
     
     const checkAdmin = async () => {
-        const response = await fetch('http://localhost:3001/check-login', {
+        const response = await fetch('/api/login', {
             method: 'GET',
             credentials: 'include',
         });
@@ -40,7 +33,6 @@ const Blog = () => {
 
     useEffect(() => {
         fetchPosts();
-        // getPosts();
         checkAdmin();
     }, [])
 

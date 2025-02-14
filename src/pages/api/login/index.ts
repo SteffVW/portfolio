@@ -10,9 +10,14 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, required: true, default: "USER" },
 });
 
-const User = mongoose.model('User', UserSchema);
+const MONGODB_URI = process.env.MONGODB_URI!;
+mongoose.connect(MONGODB_URI, {
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err: Error) => console.log("MongoDB connection error: ", err));
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
+    const User = mongoose.model('User', UserSchema);
     try {
         if(req.method === "GET"){
             const cookies = cookie.parse(req.headers.cookie || '');
