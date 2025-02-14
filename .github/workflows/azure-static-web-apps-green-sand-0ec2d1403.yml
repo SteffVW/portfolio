@@ -24,19 +24,19 @@ jobs:
         run: |
           npm install
 
-      - name: Start the server
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-          SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
-        run: |
-          cd server
-          nohup npx tsx server.ts &
+      # - name: Start the server
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      #     ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      #     ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      #     SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
+      #   run: |
+      #     cd server
+      #     nohup npx tsx server.ts &
 
-      - name: Wait for server to start
-        run: sleep 10
+      # - name: Wait for server to start
+      #   run: sleep 10
           
       - name: Build And Deploy
         id: builddeploy
