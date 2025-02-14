@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({path: "../../../../.env"});
 
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true },
