@@ -6,7 +6,7 @@ import { startServer } from "../../server/server";
 const Home = () => {
   
   useEffect(() => {
-    // startServer();
+    startServer();
   }, []);
 
   return(

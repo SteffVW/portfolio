@@ -6,7 +6,6 @@ import fastifyCors from '@fastify/cors';
 import bcrypt from "bcrypt";
 import jwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
-import {IPost} from "../types"
 
 dotenv.config({path: "../.env"});
 const fastify = Fastify({ logger: true });
@@ -128,8 +127,6 @@ export const startServer = async() =>{
     }
  });
 }
-
-startServer();
 
 // fastify.listen({ port: Number(process.env.PORT) || 8080, host: "0.0.0.0" }, async(err: Error | null, address: string) => {
 //     if (err){
