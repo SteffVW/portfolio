@@ -21,7 +21,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     try {
         if(req.method === "GET"){
             const cookies = cookie.parse(req.headers.cookie || '');
-        const token = cookies.token;
+            const token = cookies.token;
 
         if (!token) {
             res.status(200).json({ isAdmin: false, message: "No token found" });
@@ -39,26 +39,21 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
             const {username, password}: {username: string; password: string} = req.body as {username: string; password: string};
             const user = await User.findOne({username: username});
             if(!user){
-                res.status(404).send({message: "User not found"});
+                res.status(404).json({message: "User not found"})
             } else {
-                const isPasswordValid = await bcrypt.compare(password, user.password);
-                    if(!isPasswordValid){
-                        res.status(401).send({message: "Invalid password or username"});
-                    } else {
-                        try {
-                            const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!);
-                            res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-                                httpOnly: true,
-                                secure: true,
-                                sameSite: 'strict',
-                                path: '/',
-                                maxAge: 60 * 60 * 24
-                            }));
-                            res.send({message: "Logged in successfully"});
-                        } catch (err: any) {
-                            console.error("Error setting cookie: ", err);
-                            res.status(500).json({ message: "Error setting cookie", error: err.message });
-                    }
+                const validPassword = await bcrypt.compare(password, user.password)
+                if(!validPassword){
+                    res.status(401).json({message: "Invalid username or password"})
+                } else {
+                    const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET!)
+                    res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'strict',
+                        path: '/',
+                        maxAge: 60 * 60 * 24
+                    }));
+                    return res.status(200).json({message: "Success"})
                 }
             }
         }
