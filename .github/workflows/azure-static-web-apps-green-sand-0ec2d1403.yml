@@ -23,6 +23,20 @@ jobs:
       - name: install dependencies
         run: |
           npm install
+
+      - name: Start the server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
+        run: |
+          cd server
+          nohup npx tsx server.ts &
+
+      - name: Wait for server to start
+        run: sleep 10
           
       - name: Build And Deploy
         id: builddeploy
@@ -43,17 +57,6 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
-
-      - name: Start the server
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-          SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
-        run: |
-          cd server
-          nohup npx tsx server.ts &
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
