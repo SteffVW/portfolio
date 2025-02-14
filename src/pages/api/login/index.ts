@@ -49,19 +49,23 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                 if(!validPassword){
                     res.status(401).json({message: "Invalid username or password"})
                 } else {
-                    const payload = {
-                        id: user._id,
-                        role: user.role
+                    try {
+                        const payload = {
+                            id: user._id,
+                            role: user.role
+                        }
+                        const token = jwt.sign(payload, process.env.JWT_SECRET!)
+                         res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+                            httpOnly: true,
+                            secure: true,
+                            sameSite: 'strict',
+                            path: '/',
+                            maxAge: 60 * 60 * 24
+                        }));
+                        return res.status(200).json({message: "Success"})
+                    } catch (error: any) {
+                        res.status(500).json({ message: "Error with token", error: error.message });
                     }
-                    const token = jwt.sign(payload, process.env.JWT_SECRET!)
-                     res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: 'strict',
-                        path: '/',
-                        maxAge: 60 * 60 * 24
-                    }));
-                    return res.status(200).json({message: "Success"})
                 }
             }
         }
