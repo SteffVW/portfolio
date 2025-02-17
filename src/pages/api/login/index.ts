@@ -5,13 +5,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from 'dotenv'
 
-dotenv.config({path: "../../../../.env"});
-
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    password: { type: String, required: true },
-    role: { type: String, required: true, default: "USER" },
-});
+dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 mongoose.connect(MONGODB_URI, {
@@ -20,13 +14,17 @@ mongoose.connect(MONGODB_URI, {
 .catch((err: Error) => console.log("MongoDB connection error: ", err));
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    const User = mongoose.model('User', UserSchema);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin', 'https://portfolio-steff.aertssen.be');
+    const User = mongoose.models.User
     try {
         if(req.method === "GET"){
-            const cookies = cookie.parse(req.headers.cookie || '');
-            const token = cookies.token;
+            const cookiesHeader = req.headers.cookie || '';
+            console.log("Cookies header:", cookiesHeader);
+    
+            const cookiesArray = cookiesHeader.split('; ').map(cookie => cookie.split('='));
+            const cookies = Object.fromEntries(cookiesArray)
+    
+            const token = cookies.AuthToken;
+            console.log("Token:", token)
 
         if (!token) {
             res.status(200).json({ isAdmin: false, message: "No token found" });
@@ -42,7 +40,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
         }
 
         } else if(req.method === "POST") {
-            const {username, password} = req.body
+            const {username, password} = req.body 
             const user = await User.findOne({username: username});
             if(!user){
                 res.status(404).json({message: "User not found"})
@@ -56,16 +54,8 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                             id: user._id,
                             role: user.role
                         }
-                        console.log("Payload:", payload); 
                         const token = jwt.sign(payload, process.env.JWT_SECRET!)
-                        console.log("Token:", token);
-                         res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-                            httpOnly: true,
-                            secure: true,
-                            sameSite: 'strict',
-                            path: '/',
-                            maxAge: 60 * 60 * 24
-                        }));
+                         res.setHeader('Set-Cookie', `AuthToken=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24}; Secure; SameSite=Strict`)
                         return res.status(200).json({message: "Success"})
                     } catch (error) {
                         res.status(500).json({ message: "Error", error: error });
