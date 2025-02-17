@@ -22,7 +22,7 @@ mongoose.connect(MONGODB_URI, {
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     const User = mongoose.model('User', UserSchema);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin:', 'https://portfolio-steff.aertssen.be');
+    res.setHeader('Access-Control-Allow-Origin', 'https://portfolio-steff.aertssen.be');
     try {
         if(req.method === "GET"){
             const cookies = cookie.parse(req.headers.cookie || '');
