@@ -7,6 +7,12 @@ import dotenv from 'dotenv'
 
 dotenv.config();
 
+const UserSchema = new mongoose.Schema({
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    role: { type: String, required: true, default: "USER" },
+})
+
 const MONGODB_URI = process.env.MONGODB_URI!;
 mongoose.connect(MONGODB_URI, {
 })
@@ -14,7 +20,10 @@ mongoose.connect(MONGODB_URI, {
 .catch((err: Error) => console.log("MongoDB connection error: ", err));
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    const User = mongoose.models.User
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', 'https://portfolio-steff.aertssen.be');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    const User = mongoose.models.User || mongoose.model('User', UserSchema)
     try {
         if(req.method === "GET"){
             const cookiesHeader = req.headers.cookie || '';

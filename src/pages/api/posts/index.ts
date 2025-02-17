@@ -5,6 +5,12 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+const PostSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+    tags: [{ type: String, required: true }],
+ });
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 mongoose.connect(MONGODB_URI, {
@@ -13,7 +19,7 @@ mongoose.connect(MONGODB_URI, {
 .catch((err: Error) => console.log("MongoDB connection error: ", err));
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    const Post = mongoose.models.Post
+    const Post = mongoose.models.Post || mongoose.model('Post', PostSchema)
     if(req.method === 'GET'){
         const posts = await Post.find().sort({ createdAt: -1 });
         res.status(200).json(posts);
