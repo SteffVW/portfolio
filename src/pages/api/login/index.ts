@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {cookies} from 'next/headers';
+import cookie from 'cookie';
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
@@ -21,11 +21,13 @@ mongoose.connect(MONGODB_URI, {
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     const User = mongoose.model('User', UserSchema);
-    const cookie = await cookies();
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin:', 'https://portfolio-steff.aertssen.be');
     try {
         if(req.method === "GET"){
-            const cookie = await cookies();
-            const token = cookie.get("AuthToken")?.value;
+            const cookies = cookie.parse(req.headers.cookie || '');
+            const token = cookies.token;
+
         if (!token) {
             res.status(200).json({ isAdmin: false, message: "No token found" });
             return;
@@ -57,14 +59,14 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                         console.log("Payload:", payload); 
                         const token = jwt.sign(payload, process.env.JWT_SECRET!)
                         console.log("Token:", token);
-                        cookie.set('AuthToken', JSON.stringify(payload), {
-                                                    httpOnly: true,
-                                                    secure: true,
-                                                    sameSite: "strict",
-                                                    path: "/",
-                                                    maxAge: 60 * 60 * 24 
-                                                })
-                        res.status(200).json({token})
+                         res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+                            httpOnly: true,
+                            secure: true,
+                            sameSite: 'strict',
+                            path: '/',
+                            maxAge: 60 * 60 * 24
+                        }));
+                        return res.status(200).json({message: "Success"})
                     } catch (error) {
                         res.status(500).json({ message: "Error", error: error });
                     }
