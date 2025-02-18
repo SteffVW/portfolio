@@ -11,11 +11,16 @@ const Blog = () => {
     const [tags, setTags] = useState<string>("");
     const [posts, setPosts] = useState<IPost[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const fetchPosts = async () => {
+        setLoading(true)
         const res = await fetch('/api/posts');
         const data = await res.json();
         setPosts(data);
+        setInterval(() => {
+            setLoading(false)
+        }, 500);
     };
     
     const checkAdmin = async () => {
@@ -71,6 +76,18 @@ const Blog = () => {
     );
 
     return (
+        loading ? 
+        <div className={styles.loadingContainer}>
+            <Header />
+            <input 
+                type="text" 
+                placeholder="Filter by tags (separated by space)" 
+                value={filter} 
+                onChange={(e) => setFilter(e.target.value)} 
+                className={styles.filterInput}
+            />
+            <h1>Loading posts...</h1>
+        </div> :
         <div className={styles.container}>
             <Header />
             <input 
