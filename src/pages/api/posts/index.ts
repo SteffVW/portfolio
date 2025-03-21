@@ -21,6 +21,10 @@ mongoose.connect(MONGODB_URI, {
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
     const Post = mongoose.models.Post || mongoose.model('Post', PostSchema)
     if(req.method === 'GET'){
+        if(req.query.latest) {
+            const latestPost = await Post.findOne().sort({createdAt: -1})
+            res.status(200).json(latestPost);
+        }
         const posts = await Post.find().sort({ createdAt: -1 });
         res.status(200).json(posts);
     } else if(req.method === "POST"){

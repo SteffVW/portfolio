@@ -1,10 +1,3 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .textContainer {
     margin-top: 1rem;
     display: flex;
@@ -18,7 +11,7 @@
     padding: 2rem;
 }
 
-.aertssenContainer {
+.recentPost {
     margin-top: 1rem;
     border: 5px solid #000;
     background-color: rgba(255, 255, 255, 0.85);
@@ -33,5 +26,12 @@
     padding-top: 2rem;
     padding-bottom: 2rem;
     align-items: center;
-    width: 75%;
+    width: 55%;
+}
+
+.postContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
