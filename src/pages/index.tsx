@@ -10,7 +10,7 @@ const Home = () => {
   const [loading, setLoadig] = useState<boolean>(true);
 
   const fetchPosts = async() => {
-    const res = await fetch("http://localhost:3000/api/posts?latest=true");
+    const res = await fetch("/api/posts?latest=true");
     const latestPost = await res.json();
     
     setLatestPost(latestPost);
