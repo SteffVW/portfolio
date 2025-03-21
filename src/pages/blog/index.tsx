@@ -86,7 +86,7 @@ const Blog = () => {
                 onChange={(e) => setFilter(e.target.value)} 
                 className={styles.filterInput}
             />
-            <h1>Loading posts...</h1>
+            <h1>Posts laden...</h1>
         </div> :
         <div className={styles.container}>
             <Header />
